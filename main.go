@@ -114,7 +114,7 @@ func main() {
 			currentChamber = chambers[chamberID]
 			stdscr.Move(y-3, 1)
 			stdscr.ClearToEOL()
-			stdscr.MovePrint(y-3, 1, fmt.Sprintf("%s %s", menu.Current(nil).Name(), currentChamber.desc))
+			stdscr.MovePrint(y-3, 1, fmt.Sprintf("[CHAMBER %s] %s", menu.Current(nil).Name(), currentChamber.desc))
 			stdscr.Refresh()
 
 			cleanUp(menu)
