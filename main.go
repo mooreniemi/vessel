@@ -13,7 +13,6 @@ type chamber struct {
 	doorDesc string
 	id       int
 	items    []int
-	purpose  string
 }
 
 func cleanUp(menu *gc.Menu) {
@@ -46,7 +45,7 @@ func makeMenu(stdscr *gc.Window, chamber chamber) (*gc.Menu, *gc.Window) {
 
 	// Print centered menu title
 	y, x := menuwin.MaxYX()
-	title := chamber.purpose
+	title := "Exits"
 	menuwin.Box(0, 0)
 	menuwin.ColorOn(1)
 	menuwin.MovePrint(1, (x/2)-(len(title)/2), title)
@@ -85,7 +84,7 @@ func main() {
 	one := chamber{id: 1, desc: "Too dark to see what, but something is dripping.", doorDesc: "moldy"}
 	two := chamber{id: 2, desc: "It's so dry in here you feel your tongue sticky in your mouth.", doorDesc: "creaking"}
 	three := chamber{id: 3, desc: "There's a rocking chair and a crib.", doorDesc: "warm"}
-	entryway := chamber{id: 0, purpose: "Let's get out of here...", doors: []*chamber{&one, &two}, doorDesc: "cold", desc: "The chamber walls bubble in slow motion."}
+	entryway := chamber{id: 0, doors: []*chamber{&one, &two}, doorDesc: "cold", desc: "The chamber walls bubble in slow motion."}
 	two.doors = []*chamber{&entryway, &three}
 	one.doors = []*chamber{&entryway}
 	three.doors = []*chamber{&two}
