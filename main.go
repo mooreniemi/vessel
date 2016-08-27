@@ -5,9 +5,17 @@ import (
 	gc "github.com/rthornton128/goncurses"
 	"log"
 	"strconv"
+	"time"
 	ascii "vessel/ascii"
 	vp "vessel/vesselparser"
 )
+
+func updateTimer(w *gc.Window) {
+	for _ = range time.Tick(time.Second) {
+		w.MovePrint(0, 0, fmt.Sprintf("@%v", time.Now().String()))
+		w.Refresh()
+	}
+}
 
 func cleanUp(menu *gc.Menu) {
 	menu.UnPost()
@@ -22,7 +30,6 @@ func visorView(y int) *gc.Window {
 	if err != nil {
 		log.Fatal(err)
 	}
-	viewwin.MovePrint(0, 0, "viewwin")
 	viewwin.MovePrint(1, 1, ascii.RandomArt())
 	viewwin.Refresh()
 
@@ -102,8 +109,10 @@ func main() {
 
 	stdscr.MovePrint(y-1, 1, "'q' to quit")
 	stdscr.Refresh()
+	go updateTimer(stdscr)
 
 	currentChamber := chambers[0]
+
 	for {
 		gc.Update()
 		ch := menuwin.GetChar()
@@ -119,14 +128,17 @@ func main() {
 		case gc.KEY_RETURN, gc.KEY_ENTER, gc.Key('\r'):
 			chamberID, _ := strconv.Atoi(menu.Current(nil).Name())
 			currentChamber = chambers[chamberID]
+
 			stdscr.Move(y-4, 1)
 			stdscr.ClearToEOL()
-			stdscr.MovePrint(y-4, 1, fmt.Sprintf("[CHAMBER %s] %s", menu.Current(nil).Name(), currentChamber.Desc))
+			stdscr.MovePrint(y-4, 1,
+				fmt.Sprintf("[CHAMBER %s] %s", menu.Current(nil).Name(), currentChamber.Desc))
 			stdscr.Refresh()
 
 			cleanUp(menu)
-			visorView(y)
 			menu, menuwin = makeMenu(stdscr, *currentChamber, chambers)
+
+			visorView(y)
 		}
 	}
 }

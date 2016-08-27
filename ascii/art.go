@@ -52,3 +52,9 @@ func RandomArt() string {
 	rand.Seed(time.Now().Unix())
 	return art[rand.Int()%len(art)]
 }
+
+// ArtByID is modulo existing art
+func ArtByID(id int) string {
+	art := [3]string{Shell, Octopus, Bird}
+	return art[id%len(art)]
+}
