@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/MakeNowJust/heredoc"
+	hd "github.com/MakeNowJust/heredoc"
 	gc "github.com/rthornton128/goncurses"
 	"log"
 	"strconv"
 )
 
-var ascii = heredoc.Doc(`
+var ascii = hd.Doc(`
 
        /\
       {.-}
@@ -17,7 +17,7 @@ var ascii = heredoc.Doc(`
      \.-' /  ',
       \  |    /
        \ |  ,/
-    jgs \|_/
+        \|_/
 
 `)
 
@@ -98,12 +98,14 @@ func main() {
 	one := chamber{id: 1, desc: "Too dark to see what, but something is dripping.", doorDesc: "moldy"}
 	two := chamber{id: 2, desc: "It's so dry in here you feel your tongue sticky in your mouth.", doorDesc: "creaking"}
 	three := chamber{id: 3, desc: "There's a rocking chair and a crib.", doorDesc: "warm"}
+	four := chamber{id: 4, desc: "You knock over open tins of food, spilling dust across the floor.", doorDesc: "'Mess Hall'"}
 	entryway := chamber{id: 0, doors: []*chamber{&one, &two}, doorDesc: "cold", desc: "The chamber walls bubble in slow motion."}
-	two.doors = []*chamber{&entryway, &three}
+	two.doors = []*chamber{&entryway, &three, &four}
 	one.doors = []*chamber{&entryway}
 	three.doors = []*chamber{&two}
+	four.doors = []*chamber{&two}
 
-	chambers := []chamber{entryway, one, two, three}
+	chambers := []chamber{entryway, one, two, three, four}
 
 	menu, menuwin := makeMenu(stdscr, entryway)
 
@@ -111,7 +113,7 @@ func main() {
 
 	viewwin, err := gc.NewWindow(y-10, 40, 1, 1)
 	viewwin.MovePrint(0, 0, "viewwin")
-	viewwin.MovePrint(2, 1, ascii)
+	viewwin.MovePrint(1, 1, ascii)
 	viewwin.Refresh()
 
 	stdscr.MovePrint(y-1, 1, "'q' to quit")
