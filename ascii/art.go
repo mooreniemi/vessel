@@ -34,9 +34,21 @@ var Octopus = hd.Doc(`
 
 `)
 
+// Bird by mrf
+var Bird = hd.Doc(`
+
+     .--.  
+    /( @ >    ,-. 
+   / ' .'--._/  /
+   :   ,    , .'
+   '. (___.'_/
+    ((-((-''   
+
+`)
+
 // RandomArt returns random ascii string
 func RandomArt() string {
-	art := [2]string{Shell, Octopus}
+	art := [3]string{Shell, Octopus, Bird}
 	rand.Seed(time.Now().Unix())
-	return art[rand.Int()%2]
+	return art[rand.Int()%len(art)]
 }

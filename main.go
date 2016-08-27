@@ -17,6 +17,18 @@ func cleanUp(menu *gc.Menu) {
 	menu.Free()
 }
 
+func visorView(y int) *gc.Window {
+	viewwin, err := gc.NewWindow(y-10, 40, 1, 1)
+	if err != nil {
+		log.Fatal(err)
+	}
+	viewwin.MovePrint(0, 0, "viewwin")
+	viewwin.MovePrint(1, 1, ascii.RandomArt())
+	viewwin.Refresh()
+
+	return viewwin
+}
+
 func makeMenu(stdscr *gc.Window, chamber vp.Chamber, chambers []*vp.Chamber) (*gc.Menu, *gc.Window) {
 	items := make([]*gc.MenuItem, len(chamber.Doors))
 	for i, doorID := range chamber.Doors {
@@ -86,11 +98,7 @@ func main() {
 	menu, menuwin := makeMenu(stdscr, *chambers[0], chambers)
 
 	y, _ := stdscr.MaxYX()
-
-	viewwin, err := gc.NewWindow(y-10, 40, 1, 1)
-	viewwin.MovePrint(0, 0, "viewwin")
-	viewwin.MovePrint(1, 1, ascii.RandomArt())
-	viewwin.Refresh()
+	visorView(y)
 
 	stdscr.MovePrint(y-1, 1, "'q' to quit")
 	stdscr.Refresh()
@@ -117,6 +125,7 @@ func main() {
 			stdscr.Refresh()
 
 			cleanUp(menu)
+			visorView(y)
 			menu, menuwin = makeMenu(stdscr, *currentChamber, chambers)
 		}
 	}
