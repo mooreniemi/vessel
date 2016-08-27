@@ -10,9 +10,13 @@ import (
 	vp "vessel/vesselparser"
 )
 
+const longForm = "Jan 2, 2006 at 3:04pm (MST)"
+
 func updateTimer(w *gc.Window) {
+	t, _ := time.Parse(longForm, "Aug 27, 2016 at 7:54pm (EST)")
 	for _ = range time.Tick(time.Second) {
-		w.MovePrint(0, 0, fmt.Sprintf("@%v", time.Now().String()))
+		until := t.Sub(time.Now())
+		w.MovePrint(0, 1, fmt.Sprintf("%v until vessel decay.", until.String()))
 		w.Refresh()
 	}
 }
@@ -108,7 +112,9 @@ func main() {
 	visorView(y)
 
 	stdscr.MovePrint(y-1, 1, "'q' to quit")
+	stdscr.MovePrint(0, 1, "Loading timer...")
 	stdscr.Refresh()
+
 	go updateTimer(stdscr)
 
 	currentChamber := chambers[0]
