@@ -6,6 +6,7 @@ import (
 	gc "github.com/rthornton128/goncurses"
 	"log"
 	"strconv"
+	"vessel/vesselparser"
 )
 
 var ascii = hd.Doc(`
@@ -21,14 +22,6 @@ var ascii = hd.Doc(`
 
 `)
 
-type chamber struct {
-	desc     string
-	doors    []*chamber
-	doorDesc string
-	id       int
-	items    []int
-}
-
 func cleanUp(menu *gc.Menu) {
 	menu.UnPost()
 	for _, item := range menu.Items() {
@@ -37,10 +30,11 @@ func cleanUp(menu *gc.Menu) {
 	menu.Free()
 }
 
-func makeMenu(stdscr *gc.Window, chamber chamber) (*gc.Menu, *gc.Window) {
-	items := make([]*gc.MenuItem, len(chamber.doors))
-	for i, ch := range chamber.doors {
-		items[i], _ = gc.NewItem(strconv.Itoa(ch.id), fmt.Sprintf("%s door", ch.doorDesc))
+func makeMenu(stdscr *gc.Window, chamber vesselparser.Chamber, chambers []*vesselparser.Chamber) (*gc.Menu, *gc.Window) {
+	items := make([]*gc.MenuItem, len(chamber.Doors))
+	for i, doorID := range chamber.Doors {
+		items[i], _ = gc.NewItem(strconv.Itoa(chambers[doorID].ID),
+			fmt.Sprintf("%s door", chambers[doorID].DoorDesc))
 	}
 
 	menu, _ := gc.NewMenu(items)
@@ -79,6 +73,13 @@ func makeMenu(stdscr *gc.Window, chamber chamber) (*gc.Menu, *gc.Window) {
 }
 
 func main() {
+	vessel, err := vesselparser.ParseVesselYaml()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	chambers := vessel.Chambers
+
 	stdscr, err := gc.Init()
 	if err != nil {
 		log.Fatal(err)
@@ -95,19 +96,7 @@ func main() {
 	stdscr.Keypad(true)
 	gc.InitPair(1, gc.C_RED, gc.C_BLACK)
 
-	one := chamber{id: 1, desc: "Too dark to see what, but something is dripping.", doorDesc: "moldy"}
-	two := chamber{id: 2, desc: "It's so dry in here you feel your tongue sticky in your mouth.", doorDesc: "creaking"}
-	three := chamber{id: 3, desc: "There's a rocking chair and a crib.", doorDesc: "warm"}
-	four := chamber{id: 4, desc: "You knock over open tins of food, spilling dust across the floor.", doorDesc: "'Mess Hall'"}
-	entryway := chamber{id: 0, doors: []*chamber{&one, &two}, doorDesc: "cold", desc: "The chamber walls bubble in slow motion."}
-	two.doors = []*chamber{&entryway, &three, &four}
-	one.doors = []*chamber{&entryway}
-	three.doors = []*chamber{&two}
-	four.doors = []*chamber{&two}
-
-	chambers := []chamber{entryway, one, two, three, four}
-
-	menu, menuwin := makeMenu(stdscr, entryway)
+	menu, menuwin := makeMenu(stdscr, *chambers[0], chambers)
 
 	y, _ := stdscr.MaxYX()
 
@@ -119,7 +108,7 @@ func main() {
 	stdscr.MovePrint(y-1, 1, "'q' to quit")
 	stdscr.Refresh()
 
-	currentChamber := entryway
+	currentChamber := chambers[0]
 	for {
 		gc.Update()
 		ch := menuwin.GetChar()
@@ -135,13 +124,13 @@ func main() {
 		case gc.KEY_RETURN, gc.KEY_ENTER, gc.Key('\r'):
 			chamberID, _ := strconv.Atoi(menu.Current(nil).Name())
 			currentChamber = chambers[chamberID]
-			stdscr.Move(y-3, 1)
+			stdscr.Move(y-4, 1)
 			stdscr.ClearToEOL()
-			stdscr.MovePrint(y-3, 1, fmt.Sprintf("[CHAMBER %s] %s", menu.Current(nil).Name(), currentChamber.desc))
+			stdscr.MovePrint(y-4, 1, fmt.Sprintf("[CHAMBER %s] %s", menu.Current(nil).Name(), currentChamber.Desc))
 			stdscr.Refresh()
 
 			cleanUp(menu)
-			menu, menuwin = makeMenu(stdscr, currentChamber)
+			menu, menuwin = makeMenu(stdscr, *currentChamber, chambers)
 		}
 	}
 }

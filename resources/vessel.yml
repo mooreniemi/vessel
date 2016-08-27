@@ -1,0 +1,36 @@
+---
+chambers:
+  -
+    desc: "The chamber walls bubble in slow motion."
+    doorDesc: cold
+    doors:
+      - 1
+      - 2
+    id: 0
+  -
+    desc: "Too dark to see what, but something is dripping."
+    doorDesc: moldy
+    doors:
+      - 0
+    id: 1
+  -
+    desc: "It's so dry in here you feel your tongue sticky in your mouth."
+    doorDesc: creaking
+    doors:
+      - 0
+      - 3
+    id: 2
+  -
+    desc: "There's a rocking chair and a crib."
+    doorDesc: warm
+    doors:
+      - 2
+      - 4
+    id: 3
+  -
+    desc: "You knock over open tins of food, spilling dust across the floor."
+    doorDesc: "'Mess Hall'"
+    doors:
+      - 3
+    id: 4
+
