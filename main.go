@@ -2,25 +2,12 @@ package main
 
 import (
 	"fmt"
-	hd "github.com/MakeNowJust/heredoc"
 	gc "github.com/rthornton128/goncurses"
 	"log"
 	"strconv"
-	"vessel/vesselparser"
+	ascii "vessel/ascii"
+	vp "vessel/vesselparser"
 )
-
-var ascii = hd.Doc(`
-
-       /\
-      {.-}
-     ;_.-'\
-    {    _.}_
-     \.-' /  ',
-      \  |    /
-       \ |  ,/
-        \|_/
-
-`)
 
 func cleanUp(menu *gc.Menu) {
 	menu.UnPost()
@@ -30,7 +17,7 @@ func cleanUp(menu *gc.Menu) {
 	menu.Free()
 }
 
-func makeMenu(stdscr *gc.Window, chamber vesselparser.Chamber, chambers []*vesselparser.Chamber) (*gc.Menu, *gc.Window) {
+func makeMenu(stdscr *gc.Window, chamber vp.Chamber, chambers []*vp.Chamber) (*gc.Menu, *gc.Window) {
 	items := make([]*gc.MenuItem, len(chamber.Doors))
 	for i, doorID := range chamber.Doors {
 		items[i], _ = gc.NewItem(strconv.Itoa(chambers[doorID].ID),
@@ -73,7 +60,7 @@ func makeMenu(stdscr *gc.Window, chamber vesselparser.Chamber, chambers []*vesse
 }
 
 func main() {
-	vessel, err := vesselparser.ParseVesselYaml()
+	vessel, err := vp.ParseVesselYaml()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -102,7 +89,7 @@ func main() {
 
 	viewwin, err := gc.NewWindow(y-10, 40, 1, 1)
 	viewwin.MovePrint(0, 0, "viewwin")
-	viewwin.MovePrint(1, 1, ascii)
+	viewwin.MovePrint(1, 1, ascii.RandomArt())
 	viewwin.Refresh()
 
 	stdscr.MovePrint(y-1, 1, "'q' to quit")
