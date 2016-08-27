@@ -2,10 +2,24 @@ package main
 
 import (
 	"fmt"
+	"github.com/MakeNowJust/heredoc"
 	gc "github.com/rthornton128/goncurses"
 	"log"
 	"strconv"
 )
+
+var ascii = heredoc.Doc(`
+
+       /\
+      {.-}
+     ;_.-'\
+    {    _.}_
+     \.-' /  ',
+      \  |    /
+       \ |  ,/
+    jgs \|_/
+
+`)
 
 type chamber struct {
 	desc     string
@@ -30,21 +44,23 @@ func makeMenu(stdscr *gc.Window, chamber chamber) (*gc.Menu, *gc.Window) {
 	}
 
 	menu, _ := gc.NewMenu(items)
-	defer menu.Free()
 
-	menuwin, err := gc.NewWindow(10, 40, 4, 14)
+	_, x := stdscr.MaxYX()
+	// NewWindow(lines, columns, y, x)
+	menuwin, err := gc.NewWindow(10, 40, 0, x-40)
 	if err != nil {
 		log.Fatal(err)
 	}
-	menuwin.Keypad(true)
 
+	menuwin.Keypad(true)
 	menu.SetWindow(menuwin)
+
 	dwin := menuwin.Derived(6, 38, 3, 1)
 	menu.SubWindow(dwin)
 	menu.Mark(" > ")
 
 	// Print centered menu title
-	y, x := menuwin.MaxYX()
+	_, x = menuwin.MaxYX()
 	title := "Exits"
 	menuwin.Box(0, 0)
 	menuwin.ColorOn(1)
@@ -54,8 +70,6 @@ func makeMenu(stdscr *gc.Window, chamber chamber) (*gc.Menu, *gc.Window) {
 	menuwin.HLine(2, 1, gc.ACS_HLINE, x-3)
 	menuwin.MoveAddChar(2, x-2, gc.ACS_RTEE)
 
-	y, x = stdscr.MaxYX()
-	stdscr.MovePrint(y-1, 1, "'q' to exit")
 	stdscr.Refresh()
 
 	menu.Post()
@@ -95,8 +109,15 @@ func main() {
 
 	y, _ := stdscr.MaxYX()
 
-	currentChamber := entryway
+	viewwin, err := gc.NewWindow(y-10, 40, 1, 1)
+	viewwin.MovePrint(0, 0, "viewwin")
+	viewwin.MovePrint(2, 1, ascii)
+	viewwin.Refresh()
 
+	stdscr.MovePrint(y-1, 1, "'q' to quit")
+	stdscr.Refresh()
+
+	currentChamber := entryway
 	for {
 		gc.Update()
 		ch := menuwin.GetChar()
