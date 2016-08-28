@@ -41,10 +41,40 @@ func visorView(y int) *gc.Window {
 	return viewwin
 }
 
+func vesselMap(x int, current v.Chamber, chambers []*v.Chamber) *gc.Window {
+	// NewWindow(lines, columns, y, x)
+	mapwin, err := gc.NewWindow(10, 40, 8, x-40)
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, x = mapwin.MaxYX()
+	title := "Map"
+	mapwin.Box(0, 0)
+	mapwin.ColorOn(1)
+	mapwin.MovePrint(1, (x/2)-(len(title)/2), title)
+	mapwin.ColorOff(1)
+	mapwin.MoveAddChar(2, 0, gc.ACS_LTEE)
+	mapwin.HLine(2, 1, gc.ACS_HLINE, x-3)
+	mapwin.MoveAddChar(2, x-2, gc.ACS_RTEE)
+
+	for i, chamber := range chambers {
+		if chamber.ID == current.ID {
+			mapwin.MovePrint(3, i+1, "x")
+		} else {
+			mapwin.MovePrint(3, i+1, fmt.Sprintf("%d", chamber.ID))
+		}
+	}
+	mapwin.Refresh()
+
+	return mapwin
+}
+
 func chamberMenu(stdscr *gc.Window, chamber v.Chamber, chambers []*v.Chamber) (*gc.Menu, *gc.Window) {
 	items := make([]*gc.MenuItem, len(chamber.Doors))
 	for i, doorID := range chamber.Doors {
-		items[i], _ = gc.NewItem(strconv.Itoa(chambers[doorID].ID),
+		// reversed so that places you just came from
+		// appear below places you could navigate to
+		items[len(items)-i-1], _ = gc.NewItem(strconv.Itoa(chambers[doorID].ID),
 			fmt.Sprintf("%s door", chambers[doorID].DoorDesc))
 	}
 
@@ -52,7 +82,7 @@ func chamberMenu(stdscr *gc.Window, chamber v.Chamber, chambers []*v.Chamber) (*
 
 	_, x := stdscr.MaxYX()
 	// NewWindow(lines, columns, y, x)
-	menuwin, err := gc.NewWindow(10, 40, 0, x-40)
+	menuwin, err := gc.NewWindow(8, 40, 0, x-40)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -60,7 +90,7 @@ func chamberMenu(stdscr *gc.Window, chamber v.Chamber, chambers []*v.Chamber) (*
 	menuwin.Keypad(true)
 	menu.SetWindow(menuwin)
 
-	dwin := menuwin.Derived(6, 38, 3, 1)
+	dwin := menuwin.Derived(0, 38, 3, 1)
 	menu.SubWindow(dwin)
 	menu.Mark(" > ")
 
@@ -109,7 +139,7 @@ func main() {
 
 	menu, menuwin := chamberMenu(stdscr, *chambers[0], chambers)
 
-	y, _ := stdscr.MaxYX()
+	y, x := stdscr.MaxYX()
 	visorView(y)
 
 	stdscr.MovePrint(y-1, 1, "'q' to quit")
@@ -122,6 +152,7 @@ func main() {
 
 	for {
 		gc.Update()
+		vesselMap(x, *currentChamber, chambers)
 		ch := menuwin.GetChar()
 
 		switch ch {

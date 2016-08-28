@@ -43,4 +43,11 @@ chambers:
     doors:
       - 3
       - 1
+      - 6
     id: 5
+  -
+    desc: "A spacesuit is crumpled on the floor. No helmet."
+    doorDesc: "closet"
+    doors:
+      - 5
+    id: 6
