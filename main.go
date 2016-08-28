@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
+	ascii "github.com/mooreniemi/vessel/ascii"
+	vp "github.com/mooreniemi/vessel/parsing"
+	v "github.com/mooreniemi/vessel/vessel"
 	gc "github.com/rthornton128/goncurses"
 	"log"
 	"strconv"
 	"time"
-	ascii "vessel/ascii"
-	vp "vessel/parsing"
-	v "vessel/vessel"
 )
 
 const longForm = "Jan 2, 2006 at 3:04pm (MST)"

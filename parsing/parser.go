@@ -2,9 +2,9 @@ package parser
 
 import (
 	"fmt"
+	v "github.com/mooreniemi/vessel/vessel"
 	"io/ioutil"
 	"log"
-	v "vessel/vessel"
 )
 
 // ParseVesselYaml expects a resources directory
