@@ -7,13 +7,14 @@ import (
 	"strconv"
 	"time"
 	ascii "vessel/ascii"
-	vp "vessel/vesselparser"
+	vp "vessel/parsing"
+	v "vessel/vessel"
 )
 
 const longForm = "Jan 2, 2006 at 3:04pm (MST)"
 
 func updateTimer(w *gc.Window) {
-	t, _ := time.Parse(longForm, "Aug 27, 2016 at 7:54pm (EST)")
+	t, _ := time.Parse(longForm, "Aug 28, 2016 at 7:54pm (EST)")
 	for _ = range time.Tick(time.Second) {
 		until := t.Sub(time.Now())
 		w.MovePrint(0, 1, fmt.Sprintf("%v until vessel decay.", until.String()))
@@ -40,7 +41,7 @@ func visorView(y int) *gc.Window {
 	return viewwin
 }
 
-func makeMenu(stdscr *gc.Window, chamber vp.Chamber, chambers []*vp.Chamber) (*gc.Menu, *gc.Window) {
+func chamberMenu(stdscr *gc.Window, chamber v.Chamber, chambers []*v.Chamber) (*gc.Menu, *gc.Window) {
 	items := make([]*gc.MenuItem, len(chamber.Doors))
 	for i, doorID := range chamber.Doors {
 		items[i], _ = gc.NewItem(strconv.Itoa(chambers[doorID].ID),
@@ -106,7 +107,7 @@ func main() {
 	stdscr.Keypad(true)
 	gc.InitPair(1, gc.C_RED, gc.C_BLACK)
 
-	menu, menuwin := makeMenu(stdscr, *chambers[0], chambers)
+	menu, menuwin := chamberMenu(stdscr, *chambers[0], chambers)
 
 	y, _ := stdscr.MaxYX()
 	visorView(y)
@@ -142,7 +143,7 @@ func main() {
 			stdscr.Refresh()
 
 			cleanUp(menu)
-			menu, menuwin = makeMenu(stdscr, *currentChamber, chambers)
+			menu, menuwin = chamberMenu(stdscr, *currentChamber, chambers)
 
 			visorView(y)
 		}
