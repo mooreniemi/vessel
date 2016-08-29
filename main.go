@@ -65,6 +65,9 @@ func vesselMap(x int, current v.Chamber, chambers []*v.Chamber) *gc.Window {
 
 	for i, row := range vmap {
 		rowFormatted := strings.Trim(fmt.Sprint(row), "[]")
+		rowFormatted = strings.Replace(rowFormatted, "0", " ", -1)
+		// TODO use gc.ACS_CKBOARD instead of #?
+		rowFormatted = strings.Replace(rowFormatted, "1", "#", -1)
 		if vy == i {
 			mapwin.Move(0, 0)
 			mapwin.ClearToEOL()
