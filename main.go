@@ -67,7 +67,14 @@ func vesselMap(x int, current v.Chamber, chambers []*v.Chamber) *gc.Window {
 			mapwin.Move(0, 0)
 			mapwin.ClearToEOL()
 			mapwin.MovePrint(4+i, 1, row)
-			mapwin.MovePrint(4+i, 2+vx, " x ")
+
+			// FIXME not quite right padding
+			marker := "x"
+			if vx >= 1 {
+				marker = " x"
+			}
+
+			mapwin.MovePrint(4+i, 2+vx, marker)
 		} else {
 			mapwin.MovePrint(4+i, 1, row)
 		}
