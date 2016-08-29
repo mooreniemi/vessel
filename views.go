@@ -1,10 +1,7 @@
-package viewcomponents
+package vessel
 
 import (
 	"fmt"
-	ascii "github.com/mooreniemi/vessel/ascii"
-	vp "github.com/mooreniemi/vessel/parsing"
-	v "github.com/mooreniemi/vessel/vessel"
 	gc "github.com/rthornton128/goncurses"
 	"log"
 	"strconv"
@@ -39,15 +36,15 @@ func VisorView(y int) *gc.Window {
 	if err != nil {
 		log.Fatal(err)
 	}
-	viewwin.MovePrint(1, 1, ascii.RandomArt())
+	viewwin.MovePrint(1, 1, RandomArt())
 	viewwin.Refresh()
 
 	return viewwin
 }
 
-// VesselMap parses and displays the vessel
-func VesselMap(x int, current v.Chamber, chambers []*v.Chamber) *gc.Window {
-	vmap := vp.ParseVesselMap()
+// MapView parses and displays the vessel
+func MapView(x int, current Chamber, chambers []*Chamber) *gc.Window {
+	vmap := ParseVesselMap()
 
 	// NewWindow(lines, columns, y, x)
 	mapwin, err := gc.NewWindow(len(vmap)+2, 11, 0, x-11)
@@ -90,7 +87,7 @@ func VesselMap(x int, current v.Chamber, chambers []*v.Chamber) *gc.Window {
 }
 
 // ChamberMenu is our navigational system
-func ChamberMenu(stdscr *gc.Window, chamber v.Chamber, chambers []*v.Chamber) (*gc.Menu, *gc.Window) {
+func ChamberMenu(stdscr *gc.Window, chamber Chamber, chambers []*Chamber) (*gc.Menu, *gc.Window) {
 	items := make([]*gc.MenuItem, len(chamber.Doors))
 	for i, doorID := range chamber.Doors {
 		// reversed so that places you just came from

@@ -1,10 +1,8 @@
-package parser
+package vessel
 
 import (
 	"bytes"
 	"encoding/csv"
-	bd "github.com/mooreniemi/vessel/bindata"
-	v "github.com/mooreniemi/vessel/vessel"
 	"log"
 	"strconv"
 )
@@ -12,14 +10,14 @@ import (
 // ParseVesselYaml expects a resources directory
 // with a yaml file to turn into Chambers
 // http://www.yamllint.com/ also helpful
-func ParseVesselYaml() (v.Vessel, error) {
-	data, err := bd.Asset("data/vessel.yml")
+func ParseVesselYaml() (Vessel, error) {
+	data, err := Asset("data/vessel.yml")
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var vessel v.Vessel
+	var vessel Vessel
 	if err := vessel.Parse(data); err != nil {
 		log.Fatal(err)
 	}
@@ -30,7 +28,7 @@ func ParseVesselYaml() (v.Vessel, error) {
 // ParseVesselMap expects a resources direcotry
 // with a csv file to turn into a map
 func ParseVesselMap() [][]string {
-	data, err := bd.Asset("data/vessel.csv")
+	data, err := Asset("data/vessel.csv")
 
 	if err != nil {
 		log.Fatal(err)

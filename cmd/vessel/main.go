@@ -2,15 +2,14 @@ package main
 
 import (
 	"fmt"
-	vp "github.com/mooreniemi/vessel/parsing"
-	vc "github.com/mooreniemi/vessel/viewcomponents"
+	vess "github.com/mooreniemi/vessel"
 	gc "github.com/rthornton128/goncurses"
 	"log"
 	"strconv"
 )
 
 func main() {
-	vessel, err := vp.ParseVesselYaml()
+	vessel, err := vess.ParseVesselYaml()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -33,27 +32,27 @@ func main() {
 	stdscr.Keypad(true)
 	gc.InitPair(1, gc.C_RED, gc.C_BLACK)
 
-	menu, menuwin := vc.ChamberMenu(stdscr, *chambers[0], chambers)
+	menu, menuwin := vess.ChamberMenu(stdscr, *chambers[0], chambers)
 
 	y, x := stdscr.MaxYX()
-	vc.VisorView(y)
+	vess.VisorView(y)
 
 	stdscr.MovePrint(y-1, 1, "'q' to quit")
 	stdscr.MovePrint(0, 1, "Loading timer...")
 	stdscr.Refresh()
 
-	go vc.UpdateTimer(stdscr)
+	go vess.UpdateTimer(stdscr)
 
 	currentChamber := chambers[0]
 
 	for {
 		gc.Update()
-		vc.VesselMap(x, *currentChamber, chambers)
+		vess.MapView(x, *currentChamber, chambers)
 		ch := menuwin.GetChar()
 
 		switch ch {
 		case 'q':
-			vc.CleanUp(menu)
+			vess.CleanUp(menu)
 			return
 		case gc.KEY_DOWN:
 			menu.Driver(gc.REQ_DOWN)
@@ -69,10 +68,10 @@ func main() {
 				fmt.Sprintf("[CHAMBER %s] %s", menu.Current(nil).Name(), currentChamber.Desc))
 			stdscr.Refresh()
 
-			vc.CleanUp(menu)
-			menu, menuwin = vc.ChamberMenu(stdscr, *currentChamber, chambers)
+			vess.CleanUp(menu)
+			menu, menuwin = vess.ChamberMenu(stdscr, *currentChamber, chambers)
 
-			vc.VisorView(y)
+			vess.VisorView(y)
 		}
 	}
 }

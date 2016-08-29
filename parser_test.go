@@ -1,4 +1,4 @@
-package parser
+package vessel
 
 import (
 	"github.com/stretchr/testify/assert"

@@ -1,4 +1,4 @@
-package ascii
+package vessel
 
 import (
 	hd "github.com/MakeNowJust/heredoc"
