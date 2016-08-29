@@ -43,9 +43,10 @@ func ParseVesselMap() [][]int {
 		log.Fatal(err)
 	}
 
+	// TODO change to use https://github.com/gocarina/gocsv ?
 	intMap := make([][]int, len(records))
 	for i, row := range records {
-		intMap[i] = make([]int, 5)
+		intMap[i] = make([]int, len(row))
 		for j := range row {
 			intVal, _ := strconv.Atoi(records[i][j])
 			intMap[i][j] = intVal
