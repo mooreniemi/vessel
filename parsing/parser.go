@@ -29,7 +29,7 @@ func ParseVesselYaml() (v.Vessel, error) {
 
 // ParseVesselMap expects a resources direcotry
 // with a csv file to turn into a map
-func ParseVesselMap() [][]int {
+func ParseVesselMap() [][]string {
 	data, err := bd.Asset("data/vessel.csv")
 
 	if err != nil {
@@ -43,15 +43,19 @@ func ParseVesselMap() [][]int {
 		log.Fatal(err)
 	}
 
+	return records
+}
+
+// VesselMapAsInts gives back the map in [][]int
+func VesselMapAsInts(stringMap [][]string) [][]int {
 	// TODO change to use https://github.com/gocarina/gocsv ?
-	intMap := make([][]int, len(records))
-	for i, row := range records {
+	intMap := make([][]int, len(stringMap))
+	for i, row := range stringMap {
 		intMap[i] = make([]int, len(row))
 		for j := range row {
-			intVal, _ := strconv.Atoi(records[i][j])
+			intVal, _ := strconv.Atoi(stringMap[i][j])
 			intMap[i][j] = intVal
 		}
 	}
-
 	return intMap
 }

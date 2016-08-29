@@ -5,12 +5,19 @@ import (
 	"testing"
 )
 
-var parsedMap = [][]int{
+var parsedIntMap = [][]int{
 	[]int{0, 0, 1, 1, 1},
 	[]int{1, 0, 0, 0, 1},
 	[]int{1, 0, 1, 1, 1},
 	[]int{1, 0, 0, 1, 1},
 	[]int{1, 1, 1, 1, 1}}
+
+var parsedMap = [][]string{
+	[]string{"0", "0", "1", "1", "1"},
+	[]string{"1", "0", "0", "0", "1"},
+	[]string{"1", "0", "1", "1", "1"},
+	[]string{"1", "0", "0", "1", "1"},
+	[]string{"1", "1", "1", "1", "1"}}
 
 func TestParseVesselMap(t *testing.T) {
 	assert.Equal(t, parsedMap, ParseVesselMap(), "")
@@ -19,6 +26,6 @@ func TestParseVesselMap(t *testing.T) {
 func TestByCoordinates(t *testing.T) {
 	x := 1
 	y := 2
-	assert.Equal(t, parsedMap[x][y], ParseVesselMap()[x][y], "")
-	assert.Equal(t, 0, ParseVesselMap()[x][y], "")
+	assert.Equal(t, parsedIntMap[x][y], VesselMapAsInts(ParseVesselMap())[x][y], "")
+	assert.Equal(t, 0, VesselMapAsInts(ParseVesselMap())[x][y], "")
 }
