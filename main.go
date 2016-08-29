@@ -8,6 +8,7 @@ import (
 	gc "github.com/rthornton128/goncurses"
 	"log"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -63,20 +64,20 @@ func vesselMap(x int, current v.Chamber, chambers []*v.Chamber) *gc.Window {
 	vx, err := strconv.Atoi(current.X)
 
 	for i, row := range vmap {
+		rowFormatted := strings.Trim(fmt.Sprint(row), "[]")
 		if vy == i {
 			mapwin.Move(0, 0)
 			mapwin.ClearToEOL()
-			mapwin.MovePrint(4+i, 1, row)
+			mapwin.MovePrint(4+i, 1, rowFormatted)
 
-			// FIXME not quite right padding
 			marker := "x"
 			if vx >= 1 {
-				marker = " x"
+				mapwin.MovePrint(4+i, 1+vx*2, marker)
+			} else {
+				mapwin.MovePrint(4+i, 1+vx, marker)
 			}
-
-			mapwin.MovePrint(4+i, 2+vx, marker)
 		} else {
-			mapwin.MovePrint(4+i, 1, row)
+			mapwin.MovePrint(4+i, 1, rowFormatted)
 		}
 	}
 
