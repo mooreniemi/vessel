@@ -64,6 +64,8 @@ func vesselMap(x int, current v.Chamber, chambers []*v.Chamber) *gc.Window {
 
 	for i, row := range vmap {
 		if vy == i {
+			mapwin.Move(0, 0)
+			mapwin.ClearToEOL()
 			mapwin.MovePrint(4+i, 1, row)
 			mapwin.MovePrint(4+i, 2+vx, " x ")
 		} else {
