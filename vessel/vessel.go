@@ -11,6 +11,8 @@ type Chamber struct {
 	DoorDesc string `yaml:"doorDesc"`
 	ID       int
 	Items    []int
+	X        string
+	Y        string
 }
 
 // Vessel is a graph of chambers

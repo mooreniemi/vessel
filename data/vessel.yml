@@ -5,21 +5,28 @@ chambers:
     doorDesc: cold
     doors:
       - 1
-      - 2
     id: 0
+    x: 0
+    y: 0
   -
     desc: "Too dark to see what, but something is dripping."
     doorDesc: moldy
     doors:
       - 0
+      - 2
     id: 1
+    x: 1
+    y: 0
   -
     desc: "It's so dry in here you feel your tongue sticky in your mouth."
     doorDesc: creaking
     doors:
-      - 0
+      - 1
       - 3
+      - 4
     id: 2
+    x: 1
+    y: 1
   -
     desc: "There's a rocking chair and a crib."
     items:
@@ -28,8 +35,10 @@ chambers:
     doorDesc: warm
     doors:
       - 2
-      - 4
+      - 6
     id: 3
+    x: 1
+    y: 2
   -
     desc: "You knock over open tins of food, spilling dust across the floor."
     doorDesc: "'Mess Hall'"
@@ -37,6 +46,8 @@ chambers:
       - 3
       - 5
     id: 4
+    x: 2
+    y: 1
   -
     desc: "A steep shaft runs down toward somewhere damp."
     doorDesc: "'1A'"
@@ -45,9 +56,29 @@ chambers:
       - 1
       - 6
     id: 5
+    x: 3
+    y: 1
   -
     desc: "A spacesuit is crumpled on the floor. No helmet."
     doorDesc: "closet"
     doors:
       - 5
+      - 7
     id: 6
+  -
+    desc: "A loud humming: close to the power supply?"
+    doorDesc: "warning"
+    doors:
+      - 6
+      - 8
+    id: 7
+    x: 1
+    y: 3
+  -
+    desc: "A series of switches."
+    doorDesc: "'REGEN'"
+    doors:
+      - 7
+    id: 8
+    x: 2
+    y: 3

@@ -57,6 +57,11 @@ func vesselMap(x int, current v.Chamber, chambers []*v.Chamber) *gc.Window {
 	mapwin.HLine(2, 1, gc.ACS_HLINE, x-3)
 	mapwin.MoveAddChar(2, x-2, gc.ACS_RTEE)
 
+	// o o o o o
+	// o o N o o
+	// o W 0 E 1
+	// o o S o o
+	// o o 2 o o
 	for i, chamber := range chambers {
 		if chamber.ID == current.ID {
 			mapwin.MovePrint(3, i+1, "x")
@@ -118,6 +123,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	vp.ParseVesselMap()
 
 	chambers := vessel.Chambers
 
